@@ -1,0 +1,54 @@
+#telaUsername{
+    margin-bottom: 15px;
+}
+
+#usuarios{
+    background: #adadad;
+    height: 400px;
+    padding: 5px;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+#usuarios img{
+    width: 50px;
+    height: 50px;
+}
+
+.usuario_img{
+    width:17%;
+    float: left;
+    margin-right: 8px;
+}
+
+.usuario_txt{
+    width: 80%;
+    float: left;
+    font-weight: bold;
+}
+
+#mensagens{
+    background: #c9e2b3;
+    height: 400px;
+    margin-bottom: 15px;
+    padding: 5px;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+#msgUm, #msgDois{
+    background: #fff;
+    -moz-border-radius:7px;
+    -webkit-border-radius:7px;
+    border-radius:7px;
+    padding: 4px;
+    margin-bottom: 5px;
+}
+
+.cpMensagem{
+    width: 100%;
+}
+
+.dataAtual{
+    color: #c0c0c0;
+}

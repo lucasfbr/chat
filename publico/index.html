@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chat socket.io</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1 class="text-center">CHAT</h1>
+            <div class="text-center" id="telaUsername">
+                <form id="frmInformeUsuario" class="form-inline">
+                    <div class="form-group">
+                        <label for="nickname">Apelido</label>
+                        <input type="text" class="form-control" id="nickname" placeholder="Apelido">
+                    </div>
+                    <input type="submit" class="btn btn-default" value="Entrar">
+                </form>
+            </div>
+        </div>
+
+        <div class="col-xs-12">
+            <div id="salaChat">
+                <div class="col-xs-4">
+                    <div id="usuarios">
+
+                        <div id="usuario" class="list-group">
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-xs-8">
+
+                    <div id="mensagens">
+
+                    </div>
+
+                    <form id="frmMensagens" class="">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="cpMensagem"
+                                       placeholder="Digite uma mensagem" required>
+                                <span class="input-group-btn">
+                                    <input type="submit" class="btn btn-default " value="Enviar">
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+<!--<script src="/socket.io/socket.io"></script>-->
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
