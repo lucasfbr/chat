@@ -114,25 +114,5 @@ io.sockets.on('connection', function (socket) {
         return dataFormatada;
     }
 
-    function insertUsuario(idUsuario, nickName) {
-
-
-        if (usuarios.length == 0 || usuarios == null) {
-
-            //var text = '{ "usuarios" : [{ "id": "1" , "nome":"Luca Rosa" , "nickname":"lucas-rosa" }]}';
-
-            var text = '{ "id": "' + idUsuario + '" , "nickname":"' + nickName + '" }';
-
-
-            usuarios.push(JSON.parse(text));
-
-        } else {
-
-            var text2 = '{ "id": "' + idUsuario + '" , "nickname":"' + nickName + '" }';
-            usuarios.push(JSON.parse(text2));
-        }
-
-
-    }
 
 });
