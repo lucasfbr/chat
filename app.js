@@ -3,8 +3,7 @@ var path = require('path');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-var usuarios = [];
-var idUsuario = 0;
+var usuarios = {};
 
 server.listen(3000);
 
@@ -21,113 +20,85 @@ io.sockets.on('connection', function (socket) {
     //escutando o evento novo usuario, enviado pelo main.js do chat
     socket.on('novo_usuario', function (nickname, callback) {
 
-        console.log('usuarios lenght: '+usuarios.length );
 
-        if(usuarios.length == 0){
-            //metodo que adiciona usuario e id ao array usuarios
-            addUsuario(nickname, callback);
+        if(nickname in usuarios){
+            callback({retorno: false, msg: 'O apelido ' + nickname + ' ja existe, escolha outro!'});
         }else{
 
-            //percorre o array usuarios
-            usuarios.forEach(function (el, i) {
+            console.log('Novo usuario no Chat - NICKNAME : ' + nickname)
+            //retorno com um objeto contendo status(retorno) e msg
+            callback({retorno: true, msg: ''});
+            //o nickname esta sendo criado dentro do socket
+            socket.nickname = nickname;
+            usuarios[socket.nickname] = socket;
 
-                //verifica se usuario ja existe no array, caso exista retorna uma mensagem
-                //caso nao exista, adiciona ao array
-                if (usuarios[i].usuarios[i].nickname == nickname) {
+            //atualiza nossa lista de usuarios
+            atualizarUsuarios();
 
-                    console.log('entrou 1')
-
-                    callback({retorno: false, msg: 'O apelido ' + nickname + ' ja existe, escolha outro!'});
-
-                }else{
-
-                    console.log('entrou 2')
-
-                    //metodo que adiciona usuario e id ao array usuarios
-                    addUsuario(nickname, callback);
-                }
-
-            });
         }
 
     });
 
 
-    socket.on('enviar mensagem privada', function (data) {
-
-        //removendo os espaços em branco do inicio e do final da string
-        var mensagem = data.trim();
-        var dataAtual = pegarDataAtual();
-
-    })
-
-
     //existem duas formas de enviar mensagens, restritas(um para um) e publicas(todos)
     //aqui nos vamos receber uma mensagem e enviar de forma publica
     //escutando o evento "enviar mensagem" que será emitido no arquivo main.js
-    socket.on('enviar mensagem publica', function (data) {
+    socket.on('enviar mensagem', function (data) {
 
         //removendo os espaços em branco do inicio e do final da string
-        var mensagem = data.trim();
-        var dataAtual = pegarDataAtual();
+        var mensagem     = data.trim();
+        var dataAtual    = pegarDataAtual();
 
-        //emitindo um evento de forma publica, todod registrados no socket vao receber
-        io.sockets.emit('nova mensagem', {msg: mensagem, nick: socket.nickname, dataAtual: dataAtual})
+        var letra = mensagem.substr(0,1)
+
+        if(letra === "/"){
+
+            var nome = mensagem.substr(1, mensagem.indexOf(" ")).trim();
+            var msg = mensagem.substr(mensagem.indexOf(" ")+1);
+
+            if(nome in usuarios){
+                usuarios[nome].emit('nova mensagem', {msg : "(mensagem privada de " + socket.nickname + ") "+ msg, nick: socket.nickname, dataAtual: dataAtual})
+
+                socket.emit('nova mensagem', {msg : "(Você enviou para: "+nome+")" + msg,  nick : usuarios[nome].nickname, dataAtual: dataAtual});
+            }else{
+
+                socket.emit('nova mensagem', {msg : "O usuário "+nome+" não foi encontrado", nick : socket.nickname});
+
+            }
+
+        }else{
+
+            //emitindo um evento de forma publica, todod registrados no socket vao receber
+            //io.sockets.emit('nova mensagem', {msg: mensagem, nick: socket.nickname, dataAtual: dataAtual})
+            io.sockets.emit('nova mensagem', {msg: mensagem, nick: socket.nickname, dataAtual: dataAtual})
+        }
 
     });
 
     //simplesmente ao fechar o navegador o socket.io emite um evento disconnect
     socket.on('disconnect', function () {
 
-
+        //se o nickname nao existir no socket para a execuçaõ
         if (!socket.nickname) return;
+        //deleta o nickname da posicao onde foi encontrado o nickname
+        delete usuarios[socket.nickname];
 
-        //delete usuarios[socket.nickname];
-        delete usuarios[1]
+        console.log('o usuario : ' + socket.nickname + ' foi removido')
 
         //atualiza nossa lista de usuarios
         atualizarUsuarios();
     })
 
 
-    function addUsuario(nickname, callback) {
-
-        //retorno com um objeto contendo status(retorno) e msg
-        callback({retorno: true, msg: ''});
-        //o nickname esta sendo criado dentro do socket
-        socket.nickname = nickname;
-        socket.idUsuario = ++idUsuario;
-
-        //var dados = '{"usuarios" : [{"id" : "'+socket.idUsuario+'" , "nickname" : "'+socket.nickname+'"}]}';
-
-        var text = '{ "employees" : [' +
-            '{ "firstName": "xxx" , "lastName":"Doe" },' +
-            '{ "firstName":"Anna" , "lastName":"Smith" },' +
-            '{ "firstName":"Peter" , "lastName":"Jones" } ]}';
-
-
-        usuarios.push(JSON.parse(text));
-
-
-        //atualiza nossa lista de usuarios
-        atualizarUsuarios();
-
-        console.log('Novo usuario no Chat ID : ' + socket.idUsuario + ' NICKNAME : ' + socket.nickname)
-
-    }
-
     function atualizarUsuarios() {
 
-        //console.log(usuarios[0].usuarios[0].id);
-        //console.log(usuarios[0].usuarios[0].nickname);
+        //usuarios.forEach(function (el, i) {
+        //    console.log(usuarios[i].nickname)
+        //});
 
+        //console.log(' dddd ' + usuarios);
 
-        usuarios.forEach(function (el, i) {
-            console.log(usuarios[i].usuarios[i].nickname);
-        })
-
-
-        io.sockets.emit('atualiza usuarios', usuarios);
+        io.sockets.emit('atualiza usuarios', Object.keys(usuarios));
     }
 
     function pegarDataAtual() {
@@ -141,6 +112,27 @@ io.sockets.on('connection', function (socket) {
 
         var dataFormatada = dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto + ":" + segundo;
         return dataFormatada;
+    }
+
+    function insertUsuario(idUsuario, nickName) {
+
+
+        if (usuarios.length == 0 || usuarios == null) {
+
+            //var text = '{ "usuarios" : [{ "id": "1" , "nome":"Luca Rosa" , "nickname":"lucas-rosa" }]}';
+
+            var text = '{ "id": "' + idUsuario + '" , "nickname":"' + nickName + '" }';
+
+
+            usuarios.push(JSON.parse(text));
+
+        } else {
+
+            var text2 = '{ "id": "' + idUsuario + '" , "nickname":"' + nickName + '" }';
+            usuarios.push(JSON.parse(text2));
+        }
+
+
     }
 
 });

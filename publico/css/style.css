@@ -45,6 +45,51 @@
     margin-bottom: 5px;
 }
 
+#usuarioTitular{
+    background: #DCDCDC;
+    height: 70px;
+    padding: 5px 0 0 5px;
+}
+
+#usuarioSecundario{
+    background: #DCDCDC;
+    height: 75px;
+    padding: 5px;
+}
+
+
+.usuarioImg{
+    width: 70px;
+    height: 70px;
+    float: left;
+}
+
+.usuarioTxt{
+    float: left;
+}
+
+#usuarioTitular img{
+    width: 60px;
+    height: 60px;
+}
+
+#usuarioSecundario img{
+    width: 60px;
+    height: 60px;
+}
+
+.usuarioTitular_txt{
+    width: 80%;
+    float: left;
+    font-weight: bold;
+}
+
+.usuarioSecundario_txt{
+    width: 80%;
+    float: left;
+    font-weight: bold;
+}
+
 .cpMensagem{
     width: 100%;
 }

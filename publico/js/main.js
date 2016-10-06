@@ -29,44 +29,40 @@ $(function () {
             }
         })
 
-        socket.on('atualiza usuarios', function (usuarios) {
-
-            var listaUsuarios = '';
-
-            usuarios.forEach(function (el, i) {
-
-                listaUsuarios += "<button type='button' class='list-group-item'><div class='usuario_img'><img src='img/default.jpg' alt='...' class='img-circle'></div>";
-                listaUsuarios += "<div class='usuario_txt'><p>"+usuarios[i].usuarios[i].nickname+"</p></div></button>";
-
-            })
-
-            divusuario.empty().append(listaUsuarios);
-
-        });
-
-        //envio de mensagens de forma publica(broadcast)
-        /*frmMensagens.submit(function (e) {
-            e.preventDefault();
-
-            //emitindo um evento com a mensagem digitada
-            socket.emit('enviar mensagem publica', cpMensagem.val());
-            cpMensagem.val("");
-        })*/
-
-        frmMensagens.submit(function (e) {
-            e.preventDefault();
-
-            //socket.emit
-        })
-
-
-        //escutando
-        socket.on('nova mensagem', function (data) {
-
-            divMensagens.append("<div class='container'><div class='row'><div id='msgUm' class='col-xs-5'><span class='dataAtual'>[" + data.dataAtual + "]:</span>  "+ data.msg + "</div></div></div>");
-
-        });
     });
+
+    //envio de mensagens de forma publica(broadcast)
+    frmMensagens.submit(function (e) {
+        e.preventDefault();
+
+        //emitindo um evento com a mensagem digitada
+        socket.emit('enviar mensagem', cpMensagem.val());
+        cpMensagem.val("");
+    });
+
+    //escutando
+    socket.on('nova mensagem', function (data) {
+
+        divMensagens.append("<div class='container'><div class='row'><div id='msgUm' class='col-xs-5'><span class='dataAtual'>[" + data.dataAtual + "]:</span>  "+ data.msg + "</div></div></div>");
+
+    });
+
+    socket.on('atualiza usuarios', function (usuarios) {
+
+        var listaUsuarios = '';
+
+        $.each(usuarios, function(key, value){
+
+            listaUsuarios += "<button type='button' class='list-group-item'><div class='usuario_img'><img src='img/default.jpg' alt='...' class='img-circle'></div>";
+            listaUsuarios += "<div class='usuario_txt'><p>"+value+"</p></div></button>";
+
+        });
+
+        divusuario.empty().append(listaUsuarios);
+
+    });
+
+
 
 
 });
