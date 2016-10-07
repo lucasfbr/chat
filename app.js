@@ -3,7 +3,9 @@ var path = require('path');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
+var db = require('./models');
 var usuarios = {};
+
 
 server.listen(3000);
 
@@ -12,6 +14,7 @@ app.use(express.static(path.join(__dirname, 'publico')));
 app.get('/', function (req, res) {
     res.sendfile(__dirname + '/publico/index.html');
 })
+
 
 //escutando o evento connection do socket.io
 //ao abrir o navegador sera emitido o evento connection
@@ -25,12 +28,16 @@ io.sockets.on('connection', function (socket) {
             callback({retorno: false, msg: 'O apelido ' + nickname + ' ja existe, escolha outro!'});
         }else{
 
-            console.log('Novo usuario no Chat - NICKNAME : ' + nickname)
-            //retorno com um objeto contendo status(retorno) e msg
-            callback({retorno: true, msg: ''});
             //o nickname esta sendo criado dentro do socket
             socket.nickname = nickname;
+
+            //usuario criado dentro do array usuarios
             usuarios[socket.nickname] = socket;
+
+            //retorno com um objeto contendo status(retorno) e msg
+            callback({retorno: true, msg: '', nickname : socket.nickname});
+
+            console.log('Novo usuario no Chat - NICKNAME : ' + nickname);
 
             //atualiza nossa lista de usuarios
             atualizarUsuarios();
@@ -43,23 +50,24 @@ io.sockets.on('connection', function (socket) {
     //existem duas formas de enviar mensagens, restritas(um para um) e publicas(todos)
     //aqui nos vamos receber uma mensagem e enviar de forma publica
     //escutando o evento "enviar mensagem" que será emitido no arquivo main.js
-    socket.on('enviar mensagem', function (data) {
+    socket.on('enviar mensagem', function (mensagem, nickname) {
 
         //removendo os espaços em branco do inicio e do final da string
-        var mensagem     = data.trim();
+        var mensagem     = mensagem.trim();
+        var nome         = nickname;
         var dataAtual    = pegarDataAtual();
 
         var letra = mensagem.substr(0,1)
 
-        if(letra === "/"){
+        if(nome){
 
-            var nome = mensagem.substr(1, mensagem.indexOf(" ")).trim();
-            var msg = mensagem.substr(mensagem.indexOf(" ")+1);
+            //var nome = nickname;
+            //var msg = mensagem;
 
             if(nome in usuarios){
-                usuarios[nome].emit('nova mensagem', {msg : "(mensagem privada de " + socket.nickname + ") "+ msg, nick: socket.nickname, dataAtual: dataAtual})
+                usuarios[nome].emit('nova mensagem', {msg : mensagem, nick: socket.nickname, dataAtual: dataAtual, cor : true})
 
-                socket.emit('nova mensagem', {msg : "(Você enviou para: "+nome+")" + msg,  nick : usuarios[nome].nickname, dataAtual: dataAtual});
+                socket.emit('nova mensagem', {msg : mensagem,  nick : usuarios[nome].nickname, dataAtual: dataAtual});
             }else{
 
                 socket.emit('nova mensagem', {msg : "O usuário "+nome+" não foi encontrado", nick : socket.nickname});

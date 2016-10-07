@@ -1,11 +1,25 @@
+body{
+    background: #EEE5DE;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#cabecalho{
+    background: #009688;
+    width: 100%;
+    height: 127px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
 #telaUsername{
     margin-bottom: 15px;
 }
 
 #usuarios{
-    background: #adadad;
-    height: 400px;
-    padding: 5px;
+    background: #fff;
+    height: 700px;
     overflow: scroll;
     overflow-x: hidden;
 }
@@ -28,15 +42,22 @@
 }
 
 #mensagens{
-    background: #c9e2b3;
-    height: 400px;
+    /*background: #c9e2b3;*/
+    background: url("../img/skulls.png");
+    height: 700px;
     margin-bottom: 15px;
     padding: 5px;
     overflow: scroll;
     overflow-x: hidden;
 }
 
-#msgUm, #msgDois{
+#contemMsg{
+    float: left;
+    width: 100%;
+}
+
+#msgUm{
+    float: left;
     background: #fff;
     -moz-border-radius:7px;
     -webkit-border-radius:7px;
@@ -45,37 +66,54 @@
     margin-bottom: 5px;
 }
 
-#usuarioTitular{
-    background: #DCDCDC;
-    height: 70px;
-    padding: 5px 0 0 5px;
+#msgDois{
+    float: right;
+    background: #C1FFC1;
+    -moz-border-radius:7px;
+    -webkit-border-radius:7px;
+    border-radius:7px;
+    padding: 4px;
+    margin-bottom: 5px;
 }
-
-#usuarioSecundario{
-    background: #DCDCDC;
-    height: 75px;
-    padding: 5px;
-}
-
 
 .usuarioImg{
     width: 70px;
     height: 70px;
     float: left;
+    background: #DCDCDC;
 }
 
 .usuarioTxt{
     float: left;
 }
 
-#usuarioTitular img{
-    width: 60px;
-    height: 60px;
+
+#usuarioTitular{
+    width: 100%;
+    float: left;
+    background: #F2F2F2;
+    padding: 4px 0;
+    border-right: 1px solid #DCDCDC;
 }
 
-#usuarioSecundario img{
-    width: 60px;
-    height: 60px;
+#usuarioTitular img{
+    width: 45px;
+    height: 45px;
+    margin-left: 20px;
+}
+
+.usuarioTitularImg{
+    float: left;
+}
+
+.usuarioTitularTxt{
+    float: left;
+}
+
+.usuarioTitular_img{
+    width:17%;
+    float: left;
+    margin-right: 8px;
 }
 
 .usuarioTitular_txt{
@@ -84,10 +122,42 @@
     font-weight: bold;
 }
 
-.usuarioSecundario_txt{
-    width: 80%;
+#usuarioSecundario{
+    width: 100%;
+    height: 53px;
+    background: #F2F2F2;
+    padding: 4px 0;
+}
+
+#usuarioSecundario img{
+    width: 45px;
+    height: 45px;
+    margin-left: 7px;
+}
+
+.usuarioSecundarioImg{;
     float: left;
-    font-weight: bold;
+    background: #F2F2F2;
+}
+
+.usuarioSecundarioTxt{
+    float: left;
+}
+
+.usuarioSecundario_img{
+    width:17%;
+    float: left;
+    margin-right: 8px;
+}
+
+.usuarioSecundario_txt{
+    float: left;
+    color: #828282;
+
+}
+
+.usuarioSecundario_txt p {
+
 }
 
 .cpMensagem{
